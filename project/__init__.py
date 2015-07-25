@@ -6,3 +6,6 @@ app = Flask(__name__)
 app.config.from_pyfile('_config.py')
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+
+from database import Base, engine
+Base.metadata.create_all(engine)

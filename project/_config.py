@@ -1,13 +1,8 @@
-import os
+class DevelopmentConfig(object):
+    DATABASE_URI = "postgresql://localhost:5432/sano"
+    DEBUG = True
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-DATABASE = 'database.db'
-USERNAME = 'admin'
-PASSWORD = 'admin'
-WTF_CSRF_ENABLED = True
-SECRET_KEY = 'my_precious'
-
-
-DATABASE_PATH = os.path.join(basedir, DATABASE)
+class TestingConfig(object):
+    DATABASE_URI = "postgresql://localhost:5432/sano-test"
+    DEBUG = True
