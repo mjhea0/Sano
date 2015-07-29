@@ -1,8 +1,13 @@
-class DevelopmentConfig(object):
-    DATABASE_URI = "postgresql://localhost:5432/sano"
+class BaseConfig(object):
     DEBUG = True
+    SECRET_KEY = "not-a-good-secret"
 
 
-class TestingConfig(object):
+class TestingConfig(BaseConfig):
     DATABASE_URI = "postgresql://localhost:5432/sano-test"
     DEBUG = True
+
+
+class DevelopmentConfig(BaseConfig):
+    DATABASE_URI = "postgresql://localhost:5432/sano"
+    DEBUG = False
