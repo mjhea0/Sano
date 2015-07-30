@@ -1,8 +1,7 @@
 import unittest
 import os
 
-from project import app, bcrypt, db
-from project import models
+from project import app
 from project.database import Base, engine, session
 
 # Configure our app to use the testing databse
@@ -23,36 +22,6 @@ class AllTests(unittest.TestCase):
         session.close()
         # Remove the tables and their data from the database
         Base.metadata.drop_all(engine)
-
-
-    ########################
-    #### helper methods ####
-    ########################
-
-    def login(self, name, password):
-        return self.app.post('/', data=dict(
-            name=name, password=password), follow_redirects=True)
-
-    def register(self, name, email, password, confirm):
-        return self.app.post(
-            'register/',
-            data=dict(name=name, email=email, password=password,
-                      confirm=confirm),
-            follow_redirects=True
-        )
-
-    def logout(self):
-        return self.app.get('logout/', follow_redirects=True)
-
-    def create_user(self, name, email, password):
-        new_user = User(
-            name=name,
-            email=email,
-            password=bcrypt.generate_password_hash(password)
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
 
     ###############
     #### tests ####
