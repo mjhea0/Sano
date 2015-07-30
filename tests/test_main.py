@@ -1,33 +1,28 @@
-import os
 import unittest
+import os
 
-from project import app, db, bcrypt
-from project.config import basedir
-from project.models import User
+from project import app, bcrypt, db
+from project import models
+from project.database import Base, engine, session
 
-TEST_DB = 'sano-test.db'
+# Configure our app to use the testing databse
+os.environ["CONFIG_PATH"] = "project.config.TestingConfig"
 
 
 class AllTests(unittest.TestCase):
 
-    ############################
-    #### setup and teardown ####
-    ############################
-
-    # executed prior to each test
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-            os.path.join(basedir, TEST_DB)
-        self.app = app.test_client()
-        db.create_all()
-        self.assertEquals(app.debug, False)
+        """ Test setup """
+        self.client = app.test_client()
 
-    # executed after to each test
+        # Set up the tables in the database
+        Base.metadata.create_all(engine)
+
     def tearDown(self):
-        db.drop_all()
+        """ Test teardown """
+        session.close()
+        # Remove the tables and their data from the database
+        Base.metadata.drop_all(engine)
 
 
     ########################
@@ -41,7 +36,8 @@ class AllTests(unittest.TestCase):
     def register(self, name, email, password, confirm):
         return self.app.post(
             'register/',
-            data=dict(name=name, email=email, password=password, confirm=confirm),
+            data=dict(name=name, email=email, password=password,
+                      confirm=confirm),
             follow_redirects=True
         )
 
@@ -57,32 +53,16 @@ class AllTests(unittest.TestCase):
         db.session.add(new_user)
         db.session.commit()
 
-    def create_admin_user(self):
-        new_user = User(
-            name='Superman',
-            email='admin@realpython.com',
-            password=bcrypt.generate_password_hash('allpowerful'),
-            role='admin'
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
 
     ###############
     #### tests ####
     ###############
 
-    def test_users_can_register(self):
-        new_user = User("michael", "michael@mherman.org", "michaelherman")
-        db.session.add(new_user)
-        db.session.commit()
-        test = db.session.query(User).all()
-        for t in test:
-            t.name
-        assert t.name == "michael"
-
     def test_form_is_present_on_login_page(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Please sign in to access your \\\
-                      task list', response.data)
+        self.assertIn(b'Please sign in to access your grocery list',
+                      response.data)
+
+if __name__ == "__main__":
+    unittest.main()

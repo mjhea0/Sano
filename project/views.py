@@ -26,7 +26,7 @@ def login_required(test):
             return test(*args, **kwargs)
         else:
             flash('You need to login first.')
-            return redirect(url_for('users.login'))
+            return redirect(url_for('login.html'))
     return wrap
 
 
@@ -42,7 +42,7 @@ def logout():
     session.pop('role', None)
     session.pop('name', None)
     flash('Goodbye!')
-    return redirect(url_for('users.login'))
+    return redirect(url_for('login.html'))
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,10 +56,9 @@ def login():
                     user.password, request.form['password']):
                 session['logged_in'] = True
                 session['user_id'] = user.id
-                session['role'] = user.role
                 session['name'] = user.name
                 flash('Welcome!')
-                return redirect(url_for('tasks.tasks'))
+                return redirect(url_for(''))
             else:
                 error = 'Invalid username or password.'
     return render_template('login.html', form=form, error=error)
@@ -80,7 +79,7 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
                 flash('Thanks for registering. Please login.')
-                return redirect(url_for('users.login'))
+                return redirect(url_for('login.html'))
             except IntegrityError:
                 error = 'That username and/or email already exist.'
                 return render_template('register.html', form=form, error=error)
