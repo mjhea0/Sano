@@ -4,10 +4,10 @@ class BaseConfig(object):
 
 
 class TestingConfig(BaseConfig):
-    DATABASE_URI = "postgresql://localhost:5432/sano-test"
+    DATABASE_URI = "postgresql://localhost/sano-test"
     DEBUG = True
 
 
 class DevelopmentConfig(BaseConfig):
-    DATABASE_URI = "postgresql://localhost:5432/sano"
+    DATABASE_URI = "postgresql://localhost/sano"
     DEBUG = True

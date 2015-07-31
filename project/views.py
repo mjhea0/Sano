@@ -1,22 +1,11 @@
-#################
-#### imports ####
-#################
-
 from functools import wraps
-from flask import Flask, flash, redirect, render_template, \
-    request, session, url_for, Blueprint
+from flask import flash, redirect, render_template, \
+    request, session, url_for
 from sqlalchemy.exc import IntegrityError
 
-from .forms import RegisterForm, LoginForm
-from project import db, bcrypt
+from forms import RegisterForm, LoginForm
+from project import app, db, bcrypt
 from project.models import User
-
-app = Flask(__name__)
-
-
-##########################
-#### helper functions ####
-##########################
 
 
 def login_required(test):
@@ -29,10 +18,6 @@ def login_required(test):
             return redirect(url_for('login.html'))
     return wrap
 
-
-################
-#### routes ####
-################
 
 @app.route('/logout/')
 @login_required

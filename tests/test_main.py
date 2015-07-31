@@ -28,7 +28,7 @@ class AllTests(unittest.TestCase):
     ###############
 
     def test_form_is_present_on_login_page(self):
-        response = self.app.get('/')
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Please sign in to access your grocery list',
                       response.data)
