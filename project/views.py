@@ -43,7 +43,7 @@ def login():
                 session['user_id'] = user.id
                 session['name'] = user.name
                 flash('Welcome!')
-                return redirect(url_for(''))
+                return redirect(url_for('login.html'))
             else:
                 error = 'Invalid username or password.'
     return render_template('login.html', form=form, error=error)
